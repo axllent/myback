@@ -25,6 +25,7 @@ release:
 	$(call build,linux,amd64,)
 	$(call build,linux,386,)
 	$(call build,linux,arm64,)
+	$(call build,linux,arm,)
 	$(call build,darwin,amd64,)
 	$(call build,darwin,arm64,)
 	$(call build,windows,386,.exe)
