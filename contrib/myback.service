@@ -1,0 +1,19 @@
+[Unit]
+Description=MyBack server
+
+[Service]
+ExecStart=/usr/local/bin/myback server
+Restart=always
+# Restart service after 10 seconds if service crashes
+RestartSec=10
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=myback
+## Note: if you're using letsencript then you may need to run as root
+## given the letsencrypt folder permissions
+#User=nobody
+#Group=nogroup
+
+[Install]
+WantedBy=multi-user.target

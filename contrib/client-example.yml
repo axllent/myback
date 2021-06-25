@@ -1,0 +1,31 @@
+url:      https://example.com:3307        # the HTTP(S) address and port of the server
+repo:     /mnt/backups/example-databases  # the local directory where the database dumps will be stored
+user:     root                            # MySQL user
+pass:     secret                          # MySQL password
+compress: true                            # (optional) store using gzip compression (default true)
+
+# Optional - only back up these databases.
+only:
+  - 'client1'
+  - 'client2'
+  - 'companydatabase'
+  - 'dev-*'           # includes any database starting with `dev-`
+
+# Optional - ignore the following databases. Can be used in combination with the `only` options
+# however one normally would use one or the other.
+ignore:
+  - 'test'
+  - 'test-*'
+  - 'dev-largedb'
+
+# Optional - skips the data for the following tables. Table structure is however backed up.
+# Lookup format matches <database>.<table>
+nodata:
+  - 'client1.TemporaryDB'
+  - 'client2.Weblog'
+
+# Optional - selective include/exclude table data for specific tables
+# <database>.<table> <statement>
+where:
+  # skip some crap WordPress data
+  - client1.wp-options option_name NOT LIKE '%\_transient\_%' AND autoload != 'no'
