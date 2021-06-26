@@ -81,7 +81,7 @@ Documentation, issues & support:
 		}
 
 		fmt.Println("\nUpdate available", latest.Version, "- run with `-u` to update")
-		fmt.Println("\nRelease notes:\n", latest.ReleaseNotes)
+		fmt.Printf("\nRelease notes:\n%s\n\n", latest.ReleaseNotes)
 	},
 }
 
