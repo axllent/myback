@@ -1,7 +1,6 @@
 package client
 
 import (
-	"compress/gzip"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -9,6 +8,7 @@ import (
 	"os"
 
 	"github.com/axllent/myback/logger"
+	"github.com/klauspost/compress/zstd"
 )
 
 // UserAgent string
@@ -60,7 +60,7 @@ func getFile(url string) ([]byte, error) {
 }
 
 // DownloadToFile will download a url to a local file. It will compress the file with
-// gzip if Config.Compress is true
+// zstd if Config.Compress is true
 func downloadToFile(url string, queryParams map[string]string, filepath string) error {
 	client := http.Client{}
 
@@ -118,7 +118,10 @@ func downloadToFile(url string, queryParams map[string]string, filepath string) 
 	b, _ := ioutil.ReadAll(res.Body)
 
 	if Config.Compress {
-		w := gzip.NewWriter(out)
+		w, err := zstd.NewWriter(out, zstd.WithEncoderLevel(zstd.SpeedBestCompression))
+		if err != nil {
+			return err
+		}
 		if _, err := w.Write(b); err != nil {
 			return err
 		}

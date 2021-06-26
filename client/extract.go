@@ -1,7 +1,6 @@
 package client
 
 import (
-	"compress/gzip"
 	"errors"
 	"fmt"
 	"io"
@@ -10,9 +9,10 @@ import (
 	"regexp"
 
 	"github.com/axllent/myback/logger"
+	"github.com/klauspost/compress/zstd"
 )
 
-var dumpMatch = regexp.MustCompile(`\-[a-z0-9]{8}\.sql(\.gz)?$`)
+var dumpMatch = regexp.MustCompile(`\-[a-z0-9]{8}\.sql(\.zst)?$`)
 var scannedPaths = make(map[string]bool)
 var scannedFiles = make(map[string]bool)
 
@@ -50,7 +50,7 @@ func ExtractPaths(writeTo string, paths []string) error {
 		logger.Log().Infof("Reading from %s", dump)
 
 		if isCompressed(dump) {
-			reader, err := gzip.NewReader(src)
+			reader, err := zstd.NewReader(src)
 			if err != nil {
 				logger.Log().Error(err.Error())
 				continue
@@ -62,10 +62,7 @@ func ExtractPaths(writeTo string, paths []string) error {
 				continue
 			}
 
-			if err := reader.Close(); err != nil {
-				logger.Log().Error(err.Error())
-				continue
-			}
+			reader.Close()
 
 		} else {
 			_, err = io.Copy(f, src)
