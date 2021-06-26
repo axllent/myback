@@ -9,11 +9,14 @@ import (
 var extractCmd = &cobra.Command{
 	Use:   "extract <dir> [dir] [dir]",
 	Short: "Generate a SQL file from backups directories",
-	Long: `Generate a SQL file from backup directories.
+	Long: `Generate a SQL file from one or more backup directories.
 
 This will take a directory (or directory) and generate a single SQL file.
 It will recursively scan directories for underlying directories to find 
-backed up SQL dumps.`,
+backed up SQL dumps.
+
+Documentation, issues & support:
+  https://github.com/axllent/myback`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		output, _ := cmd.Flags().GetString("output")

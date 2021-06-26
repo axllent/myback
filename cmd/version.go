@@ -19,7 +19,10 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print application version information",
 	Long: `Prints detailed information about the build environment
-and the version of this software.`,
+and the version of this software.
+
+Documentation, issues & support:
+  https://github.com/axllent/myback`,
 	Run: func(cmd *cobra.Command, args []string) {
 		exe, err := os.Executable()
 		if err != nil {
