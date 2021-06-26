@@ -85,8 +85,9 @@ Usage:
   myback backup <client-config> [flags]
 
 Flags:
-  -h, --help      help for backup
-  -v, --verbose   verbose output
+  -h, --help              help for backup
+  -t, --show-timestamps   show timestamps in output
+  -v, --verbose           verbose output
 ```
 
 
