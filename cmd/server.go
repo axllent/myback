@@ -11,16 +11,17 @@ import (
 var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Run the MyBack server",
-	Long: `Runs the MyBack server.
+	Long: `Run the MyBack server.
 
 The MyBack server starts a HTTP(S) API service which the MyBack client connects to, and
 uses MySQL's user database to authenticate. Internally, the server uses mysqldump to
 stream the MySQL dumps to the client.
 
 If you assign both '--ssl-key' & '--ssl-cert' then your server will listen with HTTPS,
-otherwise HTTP. Note that MyBack is not responsible for renewing of certificates such as
-Lets Encrypt. These certficates should be renewed using other methods, after which
-the MyBack server should be restarted.
+otherwise HTTP is used.
+
+Note: MyBack is not responsible for renewing certificates such as Lets Encrypt. Certficates
+should be renewed using other methods, after which the MyBack server should be restarted.
 
 Documentation, issues & support:
   https://github.com/axllent/myback`,
@@ -32,7 +33,7 @@ Documentation, issues & support:
 			logger.Level = "vvv"
 		}
 
-		return server.Listen()
+		return server.Listen(Version)
 	},
 }
 

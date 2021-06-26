@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/axllent/myback/client"
@@ -21,12 +20,12 @@ Documentation, issues & support:
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if err := client.ParseConfig(args[0]); err != nil {
-			fmt.Println(err)
+			logger.Log().Error(err.Error())
 			os.Exit(1)
 		}
 
 		if client.Config.Repo == "" {
-			fmt.Println("Config repo not set")
+			logger.Log().Error("Config repo not set")
 			os.Exit(1)
 		}
 
@@ -36,13 +35,13 @@ Documentation, issues & support:
 		}
 
 		if err := client.CreateDirIfNotExists(client.Config.Repo); err != nil {
-			fmt.Println(err)
+			logger.Log().Error(err.Error())
 			os.Exit(1)
 		}
 
 		if errors := client.Backup(); len(errors) > 0 {
 			for _, err := range errors {
-				fmt.Println(err)
+				logger.Log().Error(err.Error())
 			}
 			os.Exit(1)
 		}
@@ -52,5 +51,7 @@ Documentation, issues & support:
 func init() {
 	rootCmd.AddCommand(backupCmd)
 
+	backupCmd.Flags().
+		BoolVarP(&logger.ShowTimestamps, "show-timestamps", "t", false, "show timestamps in output")
 	backupCmd.Flags().BoolP("verbose", "v", false, "verbose output")
 }

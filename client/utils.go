@@ -64,5 +64,5 @@ func inRegexpArray(x string, a []*regexp.Regexp) bool {
 
 // IsCompressed returns whether a file is compressed simply based on filename
 func isCompressed(file string) bool {
-	return strings.HasSuffix(file, ".gz")
+	return strings.HasSuffix(file, ".zst")
 }

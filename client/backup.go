@@ -1,7 +1,6 @@
 package client
 
 import (
-	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,6 +10,7 @@ import (
 	"sort"
 
 	"github.com/axllent/myback/logger"
+	"github.com/klauspost/compress/zstd"
 )
 
 var (
@@ -114,7 +114,7 @@ func dumpModifiedTables(database string, dbdir string) ([]string, error) {
 
 	ext := ".sql"
 	if Config.Compress {
-		ext = ext + ".gz"
+		ext = ext + ".zst"
 	}
 
 	dbFilename := fmt.Sprintf("database-%s%s", hashString(db.Create), ext)
@@ -129,7 +129,10 @@ func dumpModifiedTables(database string, dbdir string) ([]string, error) {
 		}
 
 		if Config.Compress {
-			w := gzip.NewWriter(f)
+			w, err := zstd.NewWriter(f, zstd.WithEncoderLevel(zstd.SpeedBestCompression))
+			if err != nil {
+				return tables, err
+			}
 			if _, err := w.Write([]byte(db.Create)); err != nil {
 				return tables, err
 			}
@@ -194,7 +197,7 @@ func dumpModifiedTables(database string, dbdir string) ([]string, error) {
 		// generate the table name
 		ext := ".sql"
 		if Config.Compress {
-			ext = ext + ".gz"
+			ext = ext + ".zst"
 		}
 		tblFilename := fmt.Sprintf("t-%s-%d-%s%s", table.Name, table.Checksum, hashString(table.Create+paramsStr), ext)
 

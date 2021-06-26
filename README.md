@@ -8,9 +8,10 @@ MyBack is a multi-platform client/server utility to back up a MySQL/MariaDB data
 - Server uses MySQL/MariaDB authentication for client access, can be limited to certain user(s) and/or IP(s)
 - Optional server TLS encryption via HTTPS
 - Server uses native `mysqldump` over TCP to stream data to client
-- Client only downloads changed or modified tables, and optionally stores them compressed (gzip, default true)
-- Client option to specify which databases to back up (supports wildcard)
-- Client option to ignore databases, tables or table-data (supports wildcard)
+- Client only downloads changed or modified tables over HTTP with gzip compression
+- Client option to store backups compressed in [zstd format](https://facebook.github.io/zstd/) (default true)
+- Client option to specify which databases to back up (supports wildcards)
+- Client option to ignore databases, tables or table-data (supports wildcards)
 - Client option to selectively dump only a subset of specified table data based on SQL query
 - Individual table dumps stored on client side, can be merged into single SQL file (see `myback extract -h`)
 
@@ -84,8 +85,9 @@ Usage:
   myback backup <client-config> [flags]
 
 Flags:
-  -h, --help      help for backup
-  -v, --verbose   verbose output
+  -h, --help              help for backup
+  -t, --show-timestamps   show timestamps in output
+  -v, --verbose           verbose output
 ```
 
 
