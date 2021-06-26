@@ -16,6 +16,13 @@ MyBack is a multi-platform client/server utility to back up a MySQL/MariaDB data
 - Individual table dumps stored on client side, can be merged into single SQL file (see `myback extract -h`)
 
 
+## Installation
+
+You can download the latest release from the [releases](https://github.com/axllent/myback/releases) page.
+
+Docker images are also available (`docker pull axllent/myback:latest`). 
+
+
 ## Limitations
 
 - Given the nature of the selective backup process, databases are not locked during dumps

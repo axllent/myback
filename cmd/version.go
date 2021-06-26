@@ -11,8 +11,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Version = "0.0.0-dev"
-var repo = "axllent/myback"
+var (
+	Version  = "0.0.0-dev"
+	IsDocker = "false"
+	repo     = "axllent/myback"
+)
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
@@ -80,7 +83,11 @@ Documentation, issues & support:
 			return
 		}
 
-		fmt.Println("\nUpdate available", latest.Version, "- run with `-u` to update")
+		if IsDocker == "true" {
+			fmt.Println("\nUpdate available", latest.Version, "- update your docker image ('docker pull axllent/myback')")
+		} else {
+			fmt.Println("\nUpdate available", latest.Version, "- run with `-u` to update")
+		}
 		fmt.Printf("\nRelease notes:\n%s\n\n", latest.ReleaseNotes)
 	},
 }
@@ -88,6 +95,9 @@ Documentation, issues & support:
 func init() {
 	rootCmd.AddCommand(versionCmd)
 
-	versionCmd.Flags().BoolP("update", "u", false, "update to latest version")
+	if IsDocker != "true" {
+		versionCmd.Flags().BoolP("update", "u", false, "update to latest version")
+	}
+
 	versionCmd.Flags().BoolP("verbose", "v", false, "verbose output")
 }
