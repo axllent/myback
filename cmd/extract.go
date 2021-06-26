@@ -39,5 +39,7 @@ func init() {
 		logger.Log().Error(err.Error())
 	}
 
+	extractCmd.Flags().
+		BoolVarP(&logger.ShowTimestamps, "show-timestamps", "t", false, "show timestamps in output")
 	extractCmd.Flags().BoolP("verbose", "v", false, "verbose output")
 }

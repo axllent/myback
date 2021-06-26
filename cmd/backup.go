@@ -52,5 +52,7 @@ Documentation, issues & support:
 func init() {
 	rootCmd.AddCommand(backupCmd)
 
+	backupCmd.Flags().
+		BoolVarP(&logger.ShowTimestamps, "show-timestamps", "t", false, "show timestamps in output")
 	backupCmd.Flags().BoolP("verbose", "v", false, "verbose output")
 }
