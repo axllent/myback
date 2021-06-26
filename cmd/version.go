@@ -59,7 +59,8 @@ Documentation, issues & support:
 				fmt.Println("Current binary is the latest version", Version)
 			} else {
 				fmt.Println("Successfully updated to version", latest.Version)
-				fmt.Println("Release note:\n", latest.ReleaseNotes)
+				fmt.Println("Release notes:\n", latest.ReleaseNotes)
+				fmt.Println("If this is the MyBack server, then please restart the service manually.")
 			}
 
 			return
@@ -80,7 +81,7 @@ Documentation, issues & support:
 		}
 
 		fmt.Println("\nUpdate available", latest.Version, "- run with `-u` to update")
-		fmt.Println("Release note:\n", latest.ReleaseNotes)
+		fmt.Println("Release notes:\n", latest.ReleaseNotes)
 	},
 }
 
