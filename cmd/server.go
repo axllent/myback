@@ -33,7 +33,7 @@ Documentation, issues & support:
 			logger.Level = "vvv"
 		}
 
-		return server.Listen()
+		return server.Listen(Version)
 	},
 }
 

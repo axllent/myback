@@ -17,7 +17,7 @@ import (
 var limitToUsers = make(map[string]bool)
 var limitToIPs = make(map[string]bool)
 
-func Listen() error {
+func Listen(appVer string) error {
 	checkConfig()
 
 	proto := "http"
@@ -26,8 +26,8 @@ func Listen() error {
 	}
 
 	serverAddr := fmt.Sprintf("%s://%s", proto, Config.Listen)
-	dbAddr := fmt.Sprintf("%s:%d", Config.MySQLHost, Config.MySQLPort)
-	logger.Log().Noticef("Starting server on %s for database %s", serverAddr, dbAddr)
+	dbAddr := fmt.Sprintf("tcp://%s:%d", Config.MySQLHost, Config.MySQLPort)
+	logger.Log().Noticef("Starting MyBack %s on %s for database %s", appVer, serverAddr, dbAddr)
 
 	r := mux.NewRouter().StrictSlash(true)
 
