@@ -18,9 +18,9 @@ MyBack is a multi-platform client/server utility to back up a MySQL/MariaDB data
 
 ## Installation
 
-You can download the latest release from the [releases](https://github.com/axllent/myback/releases) page.
+You can download the latest release from the [releases](https://github.com/axllent/myback/releases/latest) page.
 
-Docker images are also available (`docker pull axllent/myback:latest`). 
+A docker image is also available (`docker pull axllent/myback`). 
 
 
 ## Limitations
@@ -52,17 +52,17 @@ Usage:
   myback server [flags]
 
 Flags:
-  -h, --help                    help for server
-      --ips string              limit to ips (comma-separated)
-      --listen string           listen on interface:port (default "0.0.0.0:3307")
-      --mysql-host string       MySQL server host (default "localhost")
-      --mysql-port int          MySQL server port (default 3306)
-      --mysqldump string        mysqldump command (default "mysqldump")
-      -t, --show-timestamps     show timestamps in log output
-      --ssl-cert string         SSL certificate (optional, must be used with --ssl-key)
-      --ssl-key string          SSL private key (optional, must be used with --ssl-cert)
-      --users string            limit to users (comma-separated)
-  -v, --verbose                 verbose output
+  -h, --help                help for server
+      --ips string          limit to ips (comma-separated)
+      --listen string       listen on interface:port (default "0.0.0.0:3307")
+      --mysql-host string   MySQL server host (default "localhost")
+      --mysql-port int      MySQL server port (default 3306)
+      --mysqldump string    mysqldump command (default "mysqldump")
+  -t, --show-timestamps     show timestamps in log output
+      --ssl-cert string     SSL certificate (optional, must be used with --ssl-key)
+      --ssl-key string      SSL private key (optional, must be used with --ssl-cert)
+      --users string        limit to users (comma-separated)
+  -v, --verbose             verbose output
 ```
 
 Examples:
