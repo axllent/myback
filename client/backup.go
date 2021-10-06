@@ -22,6 +22,7 @@ var (
 	nodataSlice = []*regexp.Regexp{}
 )
 
+// Backup will perform the backup
 func Backup() []error {
 	synced := make(map[string][]string)
 

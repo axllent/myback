@@ -16,6 +16,7 @@ var dumpMatch = regexp.MustCompile(`\-[a-z0-9]{8}\.sql(\.zst)?$`)
 var scannedPaths = make(map[string]bool)
 var scannedFiles = make(map[string]bool)
 
+// ExtractPaths will extract compressed backups and write a SQL file
 func ExtractPaths(writeTo string, paths []string) error {
 	dumps := []string{}
 	for _, p := range paths {
