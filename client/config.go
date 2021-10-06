@@ -69,6 +69,14 @@ func ParseConfig(configFile string) error {
 		nodataSlice = append(nodataSlice, regexp.MustCompile("^"+quoted+"$"))
 	}
 
+	// add default logging & stats mysql tables to ignore list
+	for _, t := range []string{"mysql.*_log", "mysql.help_*", "mysql.*_stats"} {
+		replaced := strings.Replace(t, "*", "~~~~~~WILDCARD~~~~~", -1)
+		quoted := regexp.QuoteMeta(replaced)
+		quoted = strings.Replace(quoted, "~~~~~~WILDCARD~~~~~", "(.*)", -1)
+		ignoreSlice = append(ignoreSlice, regexp.MustCompile("^"+quoted+"$"))
+	}
+
 	return validConfig()
 }
 
