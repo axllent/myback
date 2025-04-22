@@ -12,9 +12,12 @@ import (
 )
 
 var (
-	Version  = "0.0.0-dev"
+	// Version is the application version
+	Version = "0.0.0-dev"
+	// IsDocker is a special setting used for Docker environments
 	IsDocker = "false"
-	repo     = "axllent/myback"
+	// Repo for updates
+	repo = "axllent/myback"
 )
 
 // versionCmd represents the version command

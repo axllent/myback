@@ -13,7 +13,6 @@ import (
 
 // Config struct
 var Config struct {
-	// type ConfigStruct struct {
 	URL      string            `yaml:"url"`
 	Repo     string            `yaml:"repo"`
 	Compress bool              `yaml:"compress"`
