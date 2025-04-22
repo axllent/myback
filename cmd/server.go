@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os/exec"
 	"runtime"
 
 	"github.com/axllent/myback/logger"
@@ -20,7 +21,7 @@ stream the MySQL dumps to the client.
 If you assign both '--ssl-key' & '--ssl-cert' then your server will listen with HTTPS,
 otherwise HTTP is used.
 
-Note: MyBack is not responsible for renewing certificates such as Lets Encrypt. Certficates
+Note: MyBack is not responsible for renewing certificates such as Lets Encrypt. Certificates
 should be renewed using other methods, after which the MyBack server should be restarted.
 
 Documentation, issues & support:
@@ -40,10 +41,17 @@ Documentation, issues & support:
 func init() {
 	rootCmd.AddCommand(serverCmd)
 
-	mysqldump := "mysqldump"
-
+	mysqldump := "mariadb-dump"
 	if runtime.GOOS == "windows" {
-		mysqldump = "mysqldump.exe"
+		mysqldump = "mariadb-dump.exe"
+	}
+
+	// fallback to MySQL if mariadb-dump not found
+	if _, err := exec.LookPath(mysqldump); err != nil {
+		mysqldump = "mysqldump"
+		if runtime.GOOS == "windows" {
+			mysqldump = "mysqldump.exe"
+		}
 	}
 
 	serverCmd.Flags().
