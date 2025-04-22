@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine as builder
+FROM golang:alpine as builder
 
 COPY . /app
 
