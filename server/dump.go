@@ -181,5 +181,12 @@ func tempFileName(prefix, suffix string) string {
 // CreateMySQLDumpAuthArgs creates the initial args
 func createMySQLDumpAuthArgs(user string) []string {
 	args := []string{"-u", user, "-h", Config.MySQLHost, "--skip-lock-tables", "--skip-add-locks"}
+
+	if Config.MySQLSSL {
+		args = append(args, "--ssl=true")
+	} else {
+		args = append(args, "--ssl=false")
+	}
+
 	return args
 }

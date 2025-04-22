@@ -11,6 +11,7 @@ import (
 var Config struct {
 	MySQLHost  string
 	MySQLPort  int
+	MySQLSSL   bool
 	Listen     string
 	MySQLDump  string
 	SSLCert    string

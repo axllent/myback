@@ -59,6 +59,8 @@ func init() {
 	serverCmd.Flags().
 		IntVar(&server.Config.MySQLPort, "mysql-port", 3306, "MySQL server port")
 	serverCmd.Flags().
+		BoolVar(&server.Config.MySQLSSL, "mysql-ssl", false, "use SSL to connect to MySQL server")
+	serverCmd.Flags().
 		StringVar(&server.Config.MySQLDump, "mysqldump", mysqldump, "mysqldump command")
 	serverCmd.Flags().
 		StringVar(&server.Config.Listen, "listen", "0.0.0.0:3307", "listen on interface:port")
