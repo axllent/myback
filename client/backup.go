@@ -4,7 +4,6 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -121,12 +120,12 @@ func dumpModifiedTables(database string, dbDir string) ([]string, error) {
 
 	dbFilename := fmt.Sprintf("database-%s%s", hashString(db.Create), ext)
 
-	dbfile := filepath.Join(dbDir, dbFilename)
+	dbFile := filepath.Join(dbDir, dbFilename)
 
-	if !isFile(dbfile) {
-		f, err := os.Create(dbfile)
+	if !isFile(dbFile) {
+		f, err := os.Create(dbFile)
 		if err != nil {
-			logger.Log().Fatalf("Error writing %s: %s", dbfile, err)
+			logger.Log().Fatalf("Error writing %s: %s", dbFile, err)
 			return tables, err
 		}
 
@@ -145,7 +144,7 @@ func dumpModifiedTables(database string, dbDir string) ([]string, error) {
 			_, err = f.WriteString(db.Create)
 
 			if err != nil {
-				logger.Log().Fatalf("Error writing %s: %s", dbfile, err)
+				logger.Log().Fatalf("Error writing %s: %s", dbFile, err)
 				err := f.Close()
 
 				return tables, err
@@ -221,7 +220,7 @@ func dumpModifiedTables(database string, dbDir string) ([]string, error) {
 
 // DeleteOldData deletes old databases and files
 func deleteOldData(repo string, tables map[string][]string) {
-	directories, err := ioutil.ReadDir(repo)
+	directories, err := os.ReadDir(repo)
 	if err != nil {
 		logger.Log().Fatalf("Error reading %s: %s", repo, err)
 		return
@@ -239,7 +238,7 @@ func deleteOldData(repo string, tables map[string][]string) {
 			continue
 		}
 		// list files inside of database directory
-		files, err := ioutil.ReadDir(dbDir)
+		files, err := os.ReadDir(dbDir)
 		if err != nil {
 			logger.Log().Fatalf("Unexpected result from %s", err)
 			return
