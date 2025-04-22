@@ -1,3 +1,4 @@
+// Package client is the client package for MyBack
 package client
 
 import (
@@ -19,7 +20,7 @@ var (
 	// a lookup array for databases to ignore
 	ignoreSlice = []*regexp.Regexp{}
 	// a lookup array for tables to skip data
-	nodataSlice = []*regexp.Regexp{}
+	noDataSlice = []*regexp.Regexp{}
 )
 
 // Backup will perform the backup
@@ -41,21 +42,21 @@ func Backup() []error {
 
 	logger.Log().Debugf("Fetching list of databases from %s", Config.URL)
 
-	dbresponse, err := getFile(Config.URL + "/db")
+	dbResponse, err := getFile(Config.URL + "/db")
 	if err != nil {
 		errors = append(errors, fmt.Errorf("error: %s", err))
 		return errors
 	}
 
-	var jsondbs = []GHMDDatabase{}
+	var JSONdbs = []GHMDDatabase{}
 
-	err = json.Unmarshal(dbresponse, &jsondbs)
+	err = json.Unmarshal(dbResponse, &JSONdbs)
 	if err != nil {
 		errors = append(errors, fmt.Errorf("unexpected result from %s: %s", Config.URL+"/db", err))
 		return errors
 	}
 
-	for _, database := range jsondbs {
+	for _, database := range JSONdbs {
 
 		if len(onlySlice) > 0 && !inRegexpArray(database.Name, onlySlice) {
 			logger.Log().Debugf("Skipping database: %s", database.Name)
@@ -72,16 +73,16 @@ func Backup() []error {
 			continue
 		}
 		// ensure database directory exists
-		dbdir := filepath.Join(Config.Repo, database.Name)
-		if _, err := os.Stat(dbdir); os.IsNotExist(err) {
-			err := os.MkdirAll(dbdir, os.ModePerm)
+		dbDir := filepath.Join(Config.Repo, database.Name)
+		if _, err := os.Stat(dbDir); os.IsNotExist(err) {
+			err := os.MkdirAll(dbDir, os.ModePerm)
 			if err != nil {
-				errors = append(errors, fmt.Errorf("cannot create database directory: %s", dbdir))
+				errors = append(errors, fmt.Errorf("cannot create database directory: %s", dbDir))
 				continue
 			}
 		}
 
-		tables, err := dumpModifiedTables(database.Name, dbdir)
+		tables, err := dumpModifiedTables(database.Name, dbDir)
 		if err != nil {
 			errors = append(errors, err)
 			continue
@@ -100,15 +101,15 @@ func Backup() []error {
 }
 
 // DumpModifiedTables dumps only changed tables
-func dumpModifiedTables(database string, dbdir string) ([]string, error) {
+func dumpModifiedTables(database string, dbDir string) ([]string, error) {
 	var db = Database{}
 	var tables []string
-	dbresponse, err := getFile(Config.URL + "/db/" + database)
+	dbResponse, err := getFile(Config.URL + "/db/" + database)
 	if err != nil {
 		return tables, err
 	}
 
-	if err := json.Unmarshal(dbresponse, &db); err != nil {
+	if err := json.Unmarshal(dbResponse, &db); err != nil {
 		logger.Log().Fatalf("Unexpected result from %s: %s", Config.URL+"/db"+database, err)
 		return tables, err
 	}
@@ -120,7 +121,7 @@ func dumpModifiedTables(database string, dbdir string) ([]string, error) {
 
 	dbFilename := fmt.Sprintf("database-%s%s", hashString(db.Create), ext)
 
-	dbfile := filepath.Join(dbdir, dbFilename)
+	dbfile := filepath.Join(dbDir, dbFilename)
 
 	if !isFile(dbfile) {
 		f, err := os.Create(dbfile)
@@ -171,7 +172,7 @@ func dumpModifiedTables(database string, dbdir string) ([]string, error) {
 			continue
 		}
 
-		if inRegexpArray(lookupName, nodataSlice) {
+		if inRegexpArray(lookupName, noDataSlice) {
 			logger.Log().Debugf("Skipping data: %s", lookupName)
 			table.Checksum = 0
 			queryParams["no-data"] = "1"
@@ -203,7 +204,7 @@ func dumpModifiedTables(database string, dbdir string) ([]string, error) {
 		tblFilename := fmt.Sprintf("t-%s-%d-%s%s", table.Name, table.Checksum, hashString(table.Create+paramsStr), ext)
 
 		tables = append(tables, tblFilename)
-		tblSave := filepath.Join(dbdir, tblFilename)
+		tblSave := filepath.Join(dbDir, tblFilename)
 
 		if !isFile(tblSave) {
 			err := downloadToFile(Config.URL+"/dump/"+database+"/"+table.Name, queryParams, tblSave)
@@ -227,25 +228,25 @@ func deleteOldData(repo string, tables map[string][]string) {
 	}
 
 	for _, dir := range directories {
-		dbdir := filepath.Join(repo, dir.Name())
+		dbDir := filepath.Join(repo, dir.Name())
 		tables, ok := tables[dir.Name()]
 		if !ok {
-			logger.Log().Infof("Deleted database: %s", dbdir)
-			err := os.RemoveAll(dbdir)
+			logger.Log().Infof("Deleted database: %s", dbDir)
+			err := os.RemoveAll(dbDir)
 			if err != nil {
-				logger.Log().Fatalf("Error deleting %s: %s", dbdir, err)
+				logger.Log().Fatalf("Error deleting %s: %s", dbDir, err)
 			}
 			continue
 		}
 		// list files inside of database directory
-		files, err := ioutil.ReadDir(dbdir)
+		files, err := ioutil.ReadDir(dbDir)
 		if err != nil {
 			logger.Log().Fatalf("Unexpected result from %s", err)
 			return
 		}
 		for _, file := range files {
 			if !inArray(file.Name(), tables) {
-				delFile := filepath.Join(dbdir, file.Name())
+				delFile := filepath.Join(dbDir, file.Name())
 				err := os.RemoveAll(delFile)
 				if err != nil {
 					logger.Log().Fatalf("Error deleting %s: %s", delFile, err)

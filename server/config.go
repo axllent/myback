@@ -22,7 +22,7 @@ var Config struct {
 func checkConfig() {
 	if Config.SSLCert == "" && Config.SSLKey != "" ||
 		Config.SSLCert != "" && Config.SSLKey == "" {
-		logger.Log().Error("You must speficy both an SSL certificate & SSL private key")
+		logger.Log().Error("You must specify both an SSL certificate & SSL private key")
 		os.Exit(1)
 	}
 

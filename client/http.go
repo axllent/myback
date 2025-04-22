@@ -3,7 +3,7 @@ package client
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
@@ -38,7 +38,7 @@ func getFile(url string) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	b, err := ioutil.ReadAll(res.Body)
+	b, err := io.ReadAll(res.Body)
 	if err := res.Body.Close(); err != nil {
 		return []byte{}, err
 	}
@@ -52,7 +52,7 @@ func getFile(url string) ([]byte, error) {
 	}
 
 	if res.StatusCode != 200 {
-		b, _ := ioutil.ReadAll(res.Body)
+		b, _ := io.ReadAll(res.Body)
 		return b, errors.New(string(b))
 	}
 
@@ -93,7 +93,7 @@ func downloadToFile(url string, queryParams map[string]string, filepath string) 
 	}
 
 	if res.StatusCode != 200 {
-		b, _ := ioutil.ReadAll(res.Body)
+		b, _ := io.ReadAll(res.Body)
 		return errors.New(string(b))
 	}
 
@@ -115,7 +115,7 @@ func downloadToFile(url string, queryParams map[string]string, filepath string) 
 
 	// we ignore errors here because the content length is unknown
 	// when streaming and ReadAll will return an "unexpected EOF"
-	b, _ := ioutil.ReadAll(res.Body)
+	b, _ := io.ReadAll(res.Body)
 
 	if Config.Compress {
 		w, err := zstd.NewWriter(out, zstd.WithEncoderLevel(zstd.SpeedBestCompression))

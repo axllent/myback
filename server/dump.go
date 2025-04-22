@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -90,15 +89,9 @@ func dump(w http.ResponseWriter, r *http.Request) {
 		args = append(args, "--all-databases")
 	}
 
-	if err != nil {
-		httpError(w, err)
-		logger.Log().Error(err.Error())
-		return
-	}
-
 	cmd := exec.Command(Config.MySQLDump, args...) // #nosec
 
-	// Set password in envinment for mysqldump
+	// Set password in environment for mysqldump
 	cmd.Env = append(os.Environ(), "MYSQL_PWD="+pass)
 
 	// temporary sql file
@@ -125,8 +118,8 @@ func dump(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	if err := cmd.Run(); err != nil {
-		if errresp, err := ioutil.ReadAll(stderr); err == nil {
-			response := strings.TrimSpace(fmt.Sprint(string(errresp)))
+		if errResp, err := io.ReadAll(stderr); err == nil {
+			response := strings.TrimSpace(fmt.Sprint(string(errResp)))
 			httpError(w, errors.New(string(response)))
 			logger.Log().Error(response)
 			return

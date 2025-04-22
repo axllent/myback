@@ -3,7 +3,7 @@ package client
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -26,10 +26,10 @@ var Config struct {
 	WhereMap map[string]string // for key => val lookups
 }
 
-// ParseConfig will set the encironment based on a config
+// ParseConfig will set the environment based on a config
 func ParseConfig(configFile string) error {
 
-	yamlData, err := ioutil.ReadFile(filepath.Clean(configFile))
+	yamlData, err := os.ReadFile(filepath.Clean(configFile))
 	if err != nil {
 		return fmt.Errorf("config file not found or readable: \"%s\"", configFile)
 	}
@@ -66,7 +66,7 @@ func ParseConfig(configFile string) error {
 		replaced := strings.Replace(i, "*", "~~~~~~WILDCARD~~~~~", -1)
 		quoted := regexp.QuoteMeta(replaced)
 		quoted = strings.Replace(quoted, "~~~~~~WILDCARD~~~~~", "(.*)", -1)
-		nodataSlice = append(nodataSlice, regexp.MustCompile("^"+quoted+"$"))
+		noDataSlice = append(noDataSlice, regexp.MustCompile("^"+quoted+"$"))
 	}
 
 	// add default logging & stats mysql tables to ignore list

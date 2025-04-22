@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// CreateDirIfNotExists will try create a directry if it does not exist
+// CreateDirIfNotExists will try create a directly if it does not exist
 func CreateDirIfNotExists(path string) error {
 	if isDir(path) {
 		return nil
