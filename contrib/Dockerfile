@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine as builder
+FROM golang:1.19-alpine as builder
 
 COPY . /app
 
@@ -13,6 +13,7 @@ apk add --no-cache upx && upx -9 myback
 FROM alpine
 
 RUN apk add --no-cache tzdata mariadb-client
+RUN apk upgrade --no-cache
 
 COPY --from=builder /app/myback /usr/local/bin/
 

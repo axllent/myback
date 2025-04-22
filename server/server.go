@@ -1,3 +1,4 @@
+// Package server provides the HTTP server for MyBack
 package server
 
 import (
@@ -11,12 +12,14 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
+	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var limitToUsers = make(map[string]bool)
 var limitToIPs = make(map[string]bool)
 
+// Listen will start the HTTP server
 func Listen(appVer string) error {
 	checkConfig()
 
@@ -137,7 +140,7 @@ func pageNotFound(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Page not found")
 }
 
-func health(w http.ResponseWriter, r *http.Request) {
+func health(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "OK")
 }
